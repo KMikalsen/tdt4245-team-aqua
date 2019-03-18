@@ -1,0 +1,86 @@
+.playArea {
+        height:100vh;
+        display: grid;
+        grid-template-columns:70vw auto;
+        grid-template-rows: 50px 70vh auto;
+        background: #262033;
+}
+
+.chatInput{
+  border:none;
+  margin-right:5px;
+  border-top-left-radius: 10px;
+  background: #B8C2CC;
+  box-shadow: inset 0 2px 4px 0 rgba(0,0,0,.6);
+  font-size:1em;
+  color:white;
+  flex-grow: 1;
+
+}
+.chatSend{
+      background: #262033;
+      border-top-right-radius: 10px;
+      min-height: 0;
+      color:white;
+      border: none;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+      font-size: 1em;
+      flex-grow: 1;
+}
+
+.header {
+    grid-column: 1/3;
+    grid-row: 1;
+    color:white;
+    background-color: #0c0b0f;
+    font-weight: bold;
+    font-size: 2em;
+}
+.scenario{
+    grid-column:1;
+    grid-row: 2;
+    margin:10px;
+    background: #F1F5F8;
+    border-radius: 10px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+}
+.deck{
+    grid-column: 1;
+    grid-row: 3;
+    margin:10px;
+    border-radius: 10px;
+    background: #F1F5F8;
+     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+}
+.chat {
+    grid-column: 2;
+    grid-row: 2/4;
+    display: grid;
+    grid-template-rows: 40px auto;
+    margin:10px;
+    border-radius: 10px;
+    background: #F1F5F8;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+}
+.sendContainer {
+    grid-row: 1;
+    display:flex;
+    align-items: stretch;
+    padding: 3px;
+}
+
+.messageContainer {
+    grid-row:2;
+    display:flex;
+    max-height: 88vh;
+    flex-direction: column;
+    overflow: auto;
+    padding:5px;
+}
+
+.messageName{
+    font-weight: bold;
+}
+.selfMessage > .messageName {
+    color: #38C172;
+}
