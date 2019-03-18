@@ -3,6 +3,8 @@ import React, {
 } from 'react';
 import {Redirect} from 'react-router-dom';
 import './PlayPage.css';
+import {scenarios, cards} from './data/cards.js';
+
 
 class PlayPage extends Component {
     constructor(props){
@@ -10,7 +12,8 @@ class PlayPage extends Component {
         this.send = this.send.bind(this);
         this.state = {
             message: "",
-            messages: []
+            messages: [],
+            scenario:{}
         }
     }
 
@@ -21,6 +24,12 @@ class PlayPage extends Component {
                 messages: that.state.messages.concat([msg])
             })
 
+        })
+
+        this.props.socket.on('scenario_send', function(msg) {
+            that.setState({
+                messages:
+            })
         })
     }
     componentDidUpdate(){
@@ -60,7 +69,7 @@ class PlayPage extends Component {
                         <input  className = "chatInput" type="text" placeholder="Enter message..."
                         onKeyDown ={(event) => {
                             if (event.keyCode == 13){
-                                document.getElementById('chat').click()    
+                                document.getElementById('chat').click()
                             }
                         }}
                         value={this.state.message} onChange={(event) => {
