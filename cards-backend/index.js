@@ -4,6 +4,8 @@ var io = require('socket.io')(http);
 
 const charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
+let rooms = []
+
 app.get('/', function(req, res) {
     res.send('<h1>Hello world </h1>')
 });
@@ -28,12 +30,22 @@ io.on('connection', function(socket) {
             result += charset[Math.floor(Math.random() * charset.length)];
         }
         console.log('Create room: ',socket.id,':', result)
+        rooms[result] = {
+            users:[]
+        }
         callback(result)
     })
 
     socket.on('join_room', function(msg) {
         socket.join(msg.room)
+        if (!(msg.room in rooms)){
+            rooms[msg.room] = {
+                users:[]
+            }
+        }
+        rooms[msg.room].users = rooms[msg.room].users.concat([msg])
         console.log(msg.name, " joined ", msg.room)
+        io.in(msg.room).emit('user_joined', rooms[msg.room] )
     })
 });
 

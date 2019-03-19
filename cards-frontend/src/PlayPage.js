@@ -13,7 +13,8 @@ class PlayPage extends Component {
         this.state = {
             message: "",
             messages: [],
-            scenario:{}
+            scenario:{},
+            cards:[]
         }
     }
 
@@ -25,11 +26,11 @@ class PlayPage extends Component {
             })
 
         })
-
-        this.props.socket.on('scenario_send', function(msg) {
-            that.setState({
-                messages:
-            })
+        this.setState({
+            scenario:scenarios.s1
+        })
+        this.setState({
+            cards:cards
         })
     }
     componentDidUpdate(){
@@ -50,6 +51,19 @@ class PlayPage extends Component {
             cName += item.id === this.props.socket.id ? "selfMessage" : ""
             return(<div className = {cName}> <span className="messageName">{item.name}</span>: {item.content}</div>)
         })
+        const users = this.props.users.map(item => {
+            return(<div>
+                {item.host ? '⭐' : null}{item.name} {item.id === this.props.socket.id ? '(you)' : null}
+            </div>)
+        })
+        const playerDeck = this.state.cards.map(item => {
+            return(
+                <div className ="card">
+                {item.title} <br/>
+                {item.description}
+                </div>
+            )
+        })
         if (!this.props.joined){
             return (
                 <Redirect to="/" />
@@ -61,8 +75,17 @@ class PlayPage extends Component {
                 {this.props.room}
                 </div>
                 <div className = "scenario">
+                    <div className ="scenarioContainer">
+                        <h1>{this.state.scenario.title}</h1>
+                        {this.state.scenario.description}
+                    </div>
+                    <div className ="userContainer">
+                        <span style={{fontWeight:'bold'}}>Users:</span>
+                        {users}
+                    </div>
                 </div>
                 <div className = "deck">
+                    {playerDeck}
                 </div>
                 <div className = "chat">
                     <div className = "sendContainer">

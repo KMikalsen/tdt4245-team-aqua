@@ -15,9 +15,11 @@ class App extends Component {
         super(props)
         this.state = {
             message:"",
-            name: "",
+            name: "Default",
             joined: false,
+            host: false,
             room:"",
+            users:[],
             messages:[]
         }
         this.create_room = this.create_room.bind(this);
@@ -32,20 +34,30 @@ class App extends Component {
         socket.on('connect', function(){
             console.log('connected')
         })
-        socket.on('message', function(msg) {
+        socket.on('user_joined', function(msg) {
             that.setState({
-                messages: that.state.messages.concat([msg])
+                users:msg.users
             })
+            console.log(that.state.users)
         })
     }
     join_room() {
-            socket.emit('join_room', {'name':this.state.name, 'room':this.state.room});
+            socket.emit('join_room', {'name':this.state.name, 'room':this.state.room, 'id':socket.id, 'host':this.state.host});
             this.setState({
                 redirect:true
             })
     }
     create_room() {
         let that = this;
+        this.setState({
+            host:true,
+            users:[{
+                name:this.state.name,
+                room:this.state.room,
+                id:socket.id,
+                host:true,
+            }]
+        })
         socket.emit('create_room', this.state.name, function(response){
             that.setState({
                 room:response,
@@ -79,7 +91,7 @@ class App extends Component {
 
     PlayPageRoute() {
       return (
-        <PlayPage name={this.state.name} room={this.state.room} socket = {socket} joined = {this.state.redirect} />
+        <PlayPage name={this.state.name} room={this.state.room} users = {this.state.users} socket = {socket} joined = {this.state.redirect} />
       );
     }
 

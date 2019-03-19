@@ -17,6 +17,13 @@
   flex-grow: 1;
 
 }
+
+.card {
+    width: 190px;
+    flex-shrink: 0;
+    margin:5px;
+    background: red;
+}
 .chatSend{
       background: #262033;
       border-top-right-radius: 10px;
@@ -32,6 +39,7 @@
     grid-column: 1/3;
     grid-row: 1;
     color:white;
+    text-align: center;
     background-color: #0c0b0f;
     font-weight: bold;
     font-size: 2em;
@@ -43,11 +51,28 @@
     background: #F1F5F8;
     border-radius: 10px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    display:grid;
+    grid-template-columns: 1fr 3fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+}
+.userContainer{
+    grid-column: 1;
+    grid-row: 1;
+    margin:10px;
+    padding:5px;
+    box-shadow: inset 0 1px 5px 0 rgba(0,0,0,.6);
+}
+.scenarioContainer {
+    grid-column: 2;
+    grid-row: 1;
+    text-align: center;
 }
 .deck{
     grid-column: 1;
     grid-row: 3;
     margin:10px;
+    display:flex;
+    overflow: scroll;
     border-radius: 10px;
     background: #F1F5F8;
      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
@@ -68,11 +93,7 @@
     align-items: stretch;
     padding: 3px;
 }
-.scenario {
-    display:grid;
-    grid-template-columns: 1fr 3fr 1fr;
-    grid-template-rows: 1fr 1fr 1fr;
-}
+
 .messageContainer {
     grid-row:2;
     display:flex;
