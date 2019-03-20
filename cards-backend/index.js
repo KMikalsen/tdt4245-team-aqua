@@ -56,6 +56,24 @@ io.on('connection', function(socket) {
     socket.on('request_remove', function(msg) {
         socket.in(msg.room).emit('remove_card', {card:msg.card, user: socket.id})
     })
+
+    socket.on('game_start', function(msg) {
+        let scenarioCards = ['C1', 'C2', 'C3', 'C4', 'C5', 'C6'];
+        let users = rooms[msg.room].users;
+        let counter = 0;
+        let decks = users.map(item => {
+            return({
+                uid:item.id,
+                deck:[]
+            })
+        })
+        while(scenarioCards.length > 0 ){
+            decks[counter % users.length].deck.push(scenarioCards.pop());
+            counter +=1;
+        }
+        console.log(decks);
+        io.in(msg.room).emit('start_game', {scenario:msg.scenario, decks:decks})
+    })
 });
 
 http.listen(8000, function() {

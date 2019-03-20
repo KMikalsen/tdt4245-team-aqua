@@ -91,7 +91,7 @@ class App extends Component {
 
     PlayPageRoute() {
       return (
-        <PlayPage name={this.state.name} room={this.state.room} users = {this.state.users} socket = {socket} joined = {this.state.redirect} />
+        <PlayPage name={this.state.name} room={this.state.room} users = {this.state.users} socket = {socket} joined = {this.state.redirect} host = {this.state.host} />
       );
     }
 

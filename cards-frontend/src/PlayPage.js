@@ -5,6 +5,7 @@ import {Redirect} from 'react-router-dom';
 import './PlayPage.css';
 import {scenarios, cards} from './data/cards.js';
 import GameCard from './GameCard.js';
+import StartGame from './StartGame.js';
 
 const MAXLEN = 3;
 
@@ -14,8 +15,10 @@ class PlayPage extends Component {
         this.send = this.send.bind(this);
         this.cardClick = this.cardClick.bind(this);
         this.removeCard = this.removeCard.bind(this);
+        this.startGame = this.startGame.bind(this);
         this.state = {
             message: "",
+            gameStarted:false,
             messages: [],
             scenario:{},
             playerDeck:[],
@@ -24,12 +27,12 @@ class PlayPage extends Component {
     }
 
     componentDidMount() {
-        this.setState({
-            scenario:scenarios.s1
-        })
-        this.setState({
-            playerDeck:cards
-        })
+        // this.setState({
+        //     scenario:scenarios.s1
+        // })
+        // this.setState({
+        //     playerDeck:cards
+        // })
 
         let that = this;
         this.props.socket.on('Chatmessage', function(msg) {
@@ -37,7 +40,6 @@ class PlayPage extends Component {
             that.setState({
                 messages: that.state.messages.concat([msg])
             })
-
         })
         this.props.socket.on('card_from_server', function(msg) {
             let card = cards.filter(item => {return item.id === msg.card})
@@ -49,6 +51,20 @@ class PlayPage extends Component {
         this.props.socket.on('remove_card', function(msg) {
             that.setState({
                 serverDeck: that.state.serverDeck.filter( item => {return item.id !== msg.card })
+            })
+        })
+
+        this.props.socket.on('start_game', function(msg) {
+            let deck = msg.decks.find(obj => {
+                return obj.uid === that.props.socket.id
+            }).deck
+
+            that.setState({
+                playerDeck: cards.filter(item =>{
+                    return deck.includes(item.id)
+                }),
+                scenario:scenarios["s"+msg.scenario],
+                gameStarted : true,
             })
         })
 
@@ -85,6 +101,10 @@ class PlayPage extends Component {
             playerDeck: this.state.playerDeck.concat(cards.filter(item => {return item.id === id})),
         })
         this.props.socket.emit('request_remove', {card: id, room:this.props.room})
+    }
+
+    startGame() {
+        this.props.socket.emit('game_start', {room:this.props.room, scenario:1})
     }
 
     render(){
@@ -127,6 +147,7 @@ class PlayPage extends Component {
                         <span style={{fontWeight:'bold'}}>Users:</span>
                         {users}
                     </div>
+                    <StartGame gameStarted={this.state.gameStarted} host={this.props.host} startGame={this.startGame}/>
                     <div className = "serverDeck">
                         {serverDeck}
                     </div>
