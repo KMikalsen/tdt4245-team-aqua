@@ -15,9 +15,9 @@ io.on('connection', function(socket) {
     socket.on('disconnect', function(){
         console.log(socket.id, ' disconnected')
     })
-    socket.on('message', function(msg) {
+    socket.on('Chatmessage', function(msg) {
         console.log(msg)
-        socket.in(msg.room).emit('message', {
+        socket.in(msg.room).emit('Chatmessage', {
             'name': msg.name,
             'room': msg.room,
             'content': msg.content
@@ -46,6 +46,15 @@ io.on('connection', function(socket) {
         rooms[msg.room].users = rooms[msg.room].users.concat([msg])
         console.log(msg.name, " joined ", msg.room)
         io.in(msg.room).emit('user_joined', rooms[msg.room] )
+    })
+
+    socket.on('card_to_server', function(msg) {
+        // console.log(msg)
+        socket.in(msg.room).emit('card_from_server', {card:msg.card, user: socket.id})
+    })
+
+    socket.on('request_remove', function(msg) {
+        socket.in(msg.room).emit('remove_card', {card:msg.card, user: socket.id})
     })
 });
 

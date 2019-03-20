@@ -1,4 +1,7 @@
+@import url('https://fonts.googleapis.com/css?family=Raleway:100,400,700|Roboto');
+
 html, body {
+    font-family: 'Raleway', sans-serif;
 }
 
 .App{

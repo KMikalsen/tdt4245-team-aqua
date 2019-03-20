@@ -4,34 +4,55 @@ import React, {
 import {Redirect} from 'react-router-dom';
 import './PlayPage.css';
 import {scenarios, cards} from './data/cards.js';
+import GameCard from './GameCard.js';
 
+const MAXLEN = 3;
 
 class PlayPage extends Component {
     constructor(props){
         super(props)
         this.send = this.send.bind(this);
+        this.cardClick = this.cardClick.bind(this);
+        this.removeCard = this.removeCard.bind(this);
         this.state = {
             message: "",
             messages: [],
             scenario:{},
-            cards:[]
+            playerDeck:[],
+            serverDeck:[],
         }
     }
 
     componentDidMount() {
+        this.setState({
+            scenario:scenarios.s1
+        })
+        this.setState({
+            playerDeck:cards
+        })
+
         let that = this;
-        this.props.socket.on('message', function(msg) {
+        this.props.socket.on('Chatmessage', function(msg) {
+            console.log("got message")
             that.setState({
                 messages: that.state.messages.concat([msg])
             })
 
         })
-        this.setState({
-            scenario:scenarios.s1
+        this.props.socket.on('card_from_server', function(msg) {
+            let card = cards.filter(item => {return item.id === msg.card})
+            that.setState({
+                serverDeck: that.state.serverDeck.concat(card)
+            })
         })
-        this.setState({
-            cards:cards
+
+        this.props.socket.on('remove_card', function(msg) {
+            that.setState({
+                serverDeck: that.state.serverDeck.filter( item => {return item.id !== msg.card })
+            })
         })
+
+
     }
     componentDidUpdate(){
         let container = document.getElementById('container')
@@ -39,10 +60,31 @@ class PlayPage extends Component {
     }
 
     send(msg) {
-        this.props.socket.emit('message', {'name':this.props.name, 'room':this.props.room,'id':this.props.socket.id, 'content': msg})
+        this.props.socket.emit('Chatmessage', {'name':this.props.name, 'room':this.props.room,'id':this.props.socket.id, 'content': msg})
         this.setState({
             messages: this.state.messages.concat([{'name':this.props.name, 'room':this.props.room, id: this.props.socket.id, 'content': msg}])
         })
+    }
+
+    cardClick(event) {
+        if (this.state.serverDeck.length >= MAXLEN)
+            return
+        this.props.socket.emit('card_to_server', {card: event.currentTarget.id, room:this.props.room})
+
+        let card = cards.filter(item => {return item.id === event.currentTarget.id})
+        this.setState({
+            playerDeck: this.state.playerDeck.filter(item => { return item.id !== event.currentTarget.id }),
+            serverDeck: this.state.serverDeck.concat(card)
+        })
+    }
+
+    removeCard(id) {
+        console.log(id);
+        this.setState({
+            serverDeck: this.state.serverDeck.filter(item => { return item.id !== id }),
+            playerDeck: this.state.playerDeck.concat(cards.filter(item => {return item.id === id})),
+        })
+        this.props.socket.emit('request_remove', {card: id, room:this.props.room})
     }
 
     render(){
@@ -56,12 +98,14 @@ class PlayPage extends Component {
                 {item.host ? '⭐' : null}{item.name} {item.id === this.props.socket.id ? '(you)' : null}
             </div>)
         })
-        const playerDeck = this.state.cards.map(item => {
+        const playerDeck = this.state.playerDeck.map(item => {
             return(
-                <div className ="card">
-                {item.title} <br/>
-                {item.description}
-                </div>
+                <GameCard id={item.id} title={item.title} description={item.description} onclick={this.cardClick}/>
+            )
+        })
+        const serverDeck = this.state.serverDeck.map(item => {
+            return(
+                <GameCard id={item.id} title={item.title} description={item.description} onclick = {null} removeable={true} removeCard = {this.removeCard} />
             )
         })
         if (!this.props.joined){
@@ -82,6 +126,9 @@ class PlayPage extends Component {
                     <div className ="userContainer">
                         <span style={{fontWeight:'bold'}}>Users:</span>
                         {users}
+                    </div>
+                    <div className = "serverDeck">
+                        {serverDeck}
                     </div>
                 </div>
                 <div className = "deck">

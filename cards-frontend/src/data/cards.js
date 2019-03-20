@@ -8,37 +8,37 @@ const scenarios = {
 
 const cards = [
     {
-        id:"1",
+        id:"C1",
         scenario:"1",
         title:"Admins",
         description:"Kontakt administrator"
     },
     {
-        id:"2",
+        id:"C2",
         scenario:"1",
         title: "Comment",
         description:"Kommenter på bilde og be de om å fjerne det"
     },
     {
-        id:"3",
+        id:"C3",
         scenario:"1",
         title: "Hitman",
         description:"Lei en hitman"
     },
     {
-        id:"4",
+        id:"C4",
         scenario:"1",
         title: "Share",
         description:"Del et bilde av de som blackmail"
     },
     {
-        id:"5",
+        id:"C5",
         scenario:"1",
         title: "Contact",
         description:"Kontakte de privat og forklar hvorfor du ikke synes det er greit"
     },
     {
-        id:"6",
+        id:"C6",
         scenario:"1",
         title: "Tell",
         description:"Fortell det til alle du kjenner slik at de kan hjelp deg"
