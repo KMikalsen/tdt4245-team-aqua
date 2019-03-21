@@ -9,7 +9,7 @@ const scenarios = {
         id:"S2",
         title:"Friend request",
         description:"You received a friend request from someone you don't know.",
-        cardIDs:[]
+        cardIDs:["C7", "C8", "C9", "C10", "C11"]
     }
 }
 
