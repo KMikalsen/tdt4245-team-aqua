@@ -5,6 +5,7 @@ import {Redirect} from 'react-router-dom';
 import './PlayPage.css';
 import {scenarios, cards} from './data/cards.js';
 import GameCard from './GameCard.js';
+import Button from '@material-ui/core/Button';
 import StartGame from './StartGame.js';
 
 const MAXLEN = 2;
@@ -16,6 +17,7 @@ class PlayPage extends Component {
         this.cardClick = this.cardClick.bind(this);
         this.removeCard = this.removeCard.bind(this);
         this.startGame = this.startGame.bind(this);
+        this.vote = this.vote.bind(this);
         this.state = {
             message: "",
             gameStarted:false,
@@ -23,6 +25,8 @@ class PlayPage extends Component {
             scenario:{},
             playerDeck:[],
             serverDeck:[],
+            voteCount:0,
+            vote:false,
         }
     }
 
@@ -54,6 +58,12 @@ class PlayPage extends Component {
             })
         })
 
+        this.props.socket.on('vote_update', function(msg) {
+            that.setState({
+                voteCount: msg.result
+            })
+        })
+
         this.props.socket.on('start_game', function(msg) {
             let deck = msg.decks.find(obj => {
                 return obj.uid === that.props.socket.id
@@ -79,6 +89,18 @@ class PlayPage extends Component {
         this.props.socket.emit('Chatmessage', {'name':this.props.name, 'room':this.props.room,'id':this.props.socket.id, 'content': msg})
         this.setState({
             messages: this.state.messages.concat([{'name':this.props.name, 'room':this.props.room, id: this.props.socket.id, 'content': msg}])
+        })
+    }
+
+    vote() {
+        this.setState(prevState => ({
+            vote: !prevState.vote,
+        }), () => {
+            this.props.socket.emit('vote', {
+                id:this.props.socket.id,
+                room:this.props.room,
+                vote:this.state.vote,
+            })
         })
     }
 
@@ -148,8 +170,22 @@ class PlayPage extends Component {
                         {users}
                     </div>
                     <StartGame gameStarted={this.state.gameStarted} host={this.props.host} startGame={this.startGame}/>
+                    <div className = "playInfo" style={{visibility:this.state.gameStarted ? 'visible': 'hidden'}}>
+                        {this.state.serverDeck.length} of {MAXLEN} cards in play.
+                     </div>
                     <div className = "serverDeck">
                         {serverDeck}
+                    </div>
+                    <div  className = "voteResultContainer" style={{visibility:this.state.gameStarted ? 'visible': 'hidden'}}>
+                        <Button style={{backgroundColor: this.state.vote ? '#51D88A': '#d5d5d5', visibility:this.state.gameStarted ? 'visible': 'hidden'}}variant = "contained" onClick = {() => {
+                            this.vote();
+                        }}>
+                        👍
+                        </Button>
+                        <p> {this.state.voteCount} of {this.props.users.length} players agree </p>
+                        <Button style={{visibility:(this.props.host && this.state.gameStarted && (this.state.voteCount === this.props.users.length) && (this.state.serverDeck.length > 0)) ? 'visible': 'hidden'}} variant='contained' onClick = {() => {}}>
+                            End turn
+                        </Button>
                     </div>
                 </div>
                 <div className = "deck">
