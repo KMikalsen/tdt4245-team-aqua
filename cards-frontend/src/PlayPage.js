@@ -7,7 +7,7 @@ import {scenarios, cards} from './data/cards.js';
 import GameCard from './GameCard.js';
 import StartGame from './StartGame.js';
 
-const MAXLEN = 3;
+const MAXLEN = 2;
 
 class PlayPage extends Component {
     constructor(props){

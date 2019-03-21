@@ -2,14 +2,14 @@
         height:100vh;
         display: grid;
         grid-template-columns:70vw auto;
-        grid-template-rows: 50px 70vh auto;
+        grid-template-rows: 50px 60vh minmax(min-content, 250px);
         background: #262033;
 }
 
 .chatInput{
   border:none;
   margin-right:5px;
-  border-top-left-radius: 10px;
+  border-bototm-left-radius: 10px;
   background: #B8C2CC;
   box-shadow: inset 0 2px 4px 0 rgba(0,0,0,.6);
   font-size:1em;
@@ -20,7 +20,7 @@
 
 .chatSend{
       background: #262033;
-      border-top-right-radius: 10px;
+      border-bottom-right-radius: 10px;
       min-height: 0;
       color:white;
       border: none;
@@ -51,12 +51,13 @@
 }
 .serverDeck {
     grid-column: 1/4;
-    grid-row: 3;
+    grid-row: 2;
     display:flex;
-    overflow: scroll;
+    justify-content: center;
+    /* overflow: scroll; */
 }
 .userContainer{
-    grid-column: 1;
+    grid-column: 3;
     grid-row: 1;
     margin:10px;
     padding:5px;
@@ -81,21 +82,21 @@
     grid-column: 2;
     grid-row: 2/4;
     display: grid;
-    grid-template-rows: 40px auto;
+    grid-template-rows: auto 40px;
     margin:10px;
     border-radius: 10px;
     background: #F1F5F8;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
 }
 .sendContainer {
-    grid-row: 1;
+    grid-row: 2;
     display:flex;
     align-items: stretch;
     padding: 3px;
 }
 
 .messageContainer {
-    grid-row:2;
+    grid-row:1;
     display:flex;
     max-height: 88vh;
     flex-direction: column;
