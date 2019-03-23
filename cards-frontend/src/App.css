@@ -5,7 +5,7 @@ html, body {
 }
 
 .App{
-    background-color: #0c0b0f;
+    /* background-color: #0c0b0f; */
     color: #04f992;
     min-height:100vh;
     display: grid;
@@ -31,6 +31,9 @@ html, body {
     grid-column: 2/3;
     grid-row: 3/4;
     align-self: center;
+    display: flex;
+    align-items: baseline;
+    justify-content:flex-start;
 }
 #createRoom {
     grid-column: 2/3;
@@ -57,20 +60,4 @@ html, body {
   padding:10px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
   font-size: 20pt;
-}
-button:hover {
-    border: 1px solid #04f992;
-}
-input{
-  border:none;
-  background: #262033;
-  padding:5px 5px 5px 15px;
-  /* border-radius: 10px; */
-  box-shadow: inset 0 2px 4px 0 rgba(0,0,0,.6);
-  border-bottom: 2px solid #04f992;
-  font-size:3em;
-  /* color:#FE4B74; */
-  color:white;
-  /* padding-left:46px; */
-
 }

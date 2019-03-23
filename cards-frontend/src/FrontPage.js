@@ -2,6 +2,8 @@ import React, {
     Component
 } from 'react';
 import {Redirect} from 'react-router-dom';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
 
 class FrontPage extends Component {
     render(){
@@ -16,23 +18,45 @@ class FrontPage extends Component {
                     <h1>Privacy.</h1>
                 </div>
                 <div className = "nameContainer">
-                    <input type="text" placeholder="Name" value={this.props.name} onChange={(event) => {
-                        this.props.nameChange(event)
-                    }} />
+                    <TextField
+                        id="standard-name"
+                        label="Name"
+                        value={this.props.name}
+                        onChange={(event) => {
+                            this.props.nameChange(event)
+                        }}
+                        margin="normal"
+                        variant="outlined"
+                    />
                 </div>
                 <div className = "buttonContainer" id = "joinRoom">
-                    <button className ="fpButton" style={{visibility:this.props.name ? 'visible':'hidden' }} onClick={this.props.join_room}>
-                    Join room
-                    </button>
-                <input  placeholder ="Room code" style={{fontSize:'2em',
-                visibility: this.props.name ? 'visible':'hidden' }} type="text" value={this.props.room} maxLength="4" onChange={(event) => {
-                    this.props.roomChange(event)
-                }} />
+                    <Button
+                        variant="outlined"
+                        style={{visibility:this.props.name ? 'visible':'hidden', height:'fit-content'}}
+                        onClick={this.props.join_room}
+                    >
+                        Join Room
+                    </Button>
+                    <TextField
+                        id="standard-code"
+                        label="Room code"
+                        value={this.props.room}
+                        onChange={(event) => {
+                            this.props.roomChange(event)
+                        }}
+                        style={{visibility: this.props.name ? 'visible':'hidden', marginLeft:'15px'}}
+                        maxLength="4"
+                        margin="normal"
+                    />
                 </div>
                 <div className = "buttonContainer" id = "createRoom">
-                    <button className ="fpButton" style={{visibility:this.props.name ? 'visible':'hidden' }} onClick={this.props.create_room}>
-                    Create room
-                    </button><br/>
+                    <Button
+                        variant="outlined"
+                        style={{visibility:this.props.name ? 'visible':'hidden' }}
+                        onClick={this.props.create_room}
+                    >
+                        Create Room
+                    </Button>
                 </div>
                 <div className = "image">
 
