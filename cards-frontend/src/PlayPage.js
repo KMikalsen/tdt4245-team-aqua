@@ -5,7 +5,7 @@ import {Redirect} from 'react-router-dom';
 import './PlayPage.css';
 import {scenarios, cards} from './data/cards.js';
 import GameCard from './GameCard.js';
-import Button from '@material-ui/core/Button';
+import { Button, Menu, List, Image, Input, Feed } from 'semantic-ui-react';
 import StartGame from './StartGame.js';
 
 const MAXLEN = 2;
@@ -131,15 +131,31 @@ class PlayPage extends Component {
 
     render(){
         const messages = this.state.messages.map(item => {
-            let cName = "message "
-            cName += item.id === this.props.socket.id ? "selfMessage" : ""
-            return(<div className = {cName}> <span className="messageName">{item.name}</span>: {item.content}</div>)
+            return(
+                <Feed.Event>
+                    <Feed.Label image ={'https://ui-avatars.com/api/?name=' + item.name[0]} />
+                    <Feed.Content>
+                        <Feed.Summary>
+                            {item.name}
+                        </Feed.Summary>
+                        <Feed.Extra text>
+                            {item.content}
+                        </Feed.Extra>
+                    </Feed.Content>
+                </Feed.Event>
+            )
         })
         const users = this.props.users.map(item => {
-            return(<div>
-                {item.host ? '⭐' : null}{item.name} {item.id === this.props.socket.id ? '(you)' : null}
-            </div>)
-        })
+            return(<List.Item>
+                    <Image avatar src={'https://ui-avatars.com/api/?name=' + item.name[0]}/>
+                    <List.Content>
+                        <List.Header>
+                            {item.name}
+                        </List.Header>
+                        {item.host ? 'Host' : null}
+                    </List.Content>
+                </List.Item>)
+            })
         const playerDeck = this.state.playerDeck.map(item => {
             return(
                 <GameCard id={item.id} title={item.title} description={item.description} onclick={this.cardClick}/>
@@ -157,18 +173,19 @@ class PlayPage extends Component {
         }
         return(
             <div className = "playArea">
-                <div className = "header">
-                {this.props.room}
-                </div>
+                <Menu className = "header">
+                    <Menu.Item header> Privacy. </Menu.Item>
+                    <Menu.Item name={this.props.room} />
+                </Menu>
+
                 <div className = "scenario">
                     <div className ="scenarioContainer">
                         <h1>{this.state.scenario.title}</h1>
                         {this.state.scenario.description}
                     </div>
-                    <div className ="userContainer">
-                        <span style={{fontWeight:'bold'}}>Users:</span>
+                    <List divided className ="userContainer">
                         {users}
-                    </div>
+                    </List>
                     <StartGame gameStarted={this.state.gameStarted} host={this.props.host} startGame={this.startGame}/>
                     <div className = "playInfo" style={{visibility:this.state.gameStarted ? 'visible': 'hidden'}}>
                         {this.state.serverDeck.length} of {MAXLEN} cards in play.
@@ -193,7 +210,7 @@ class PlayPage extends Component {
                 </div>
                 <div className = "chat">
                     <div className = "sendContainer">
-                        <input  className = "chatInput" type="text" placeholder="Enter message..."
+                        <Input fluid placeholder="Enter message..."
                         onKeyDown ={(event) => {
                             if (event.keyCode == 13){
                                 document.getElementById('chat').click()
@@ -203,19 +220,22 @@ class PlayPage extends Component {
                             this.setState({
                                 message:event.target.value
                             })
-                        }} />
-                        <button className = "chatSend" id="chat" style={{visibility:this.props.name ? 'visible':'hidden' }} onClick={() => {
-                            this.send(this.state.message)
-                            this.setState({
-                                message:""
-                            })
-                        }}>
-                        Chat
-                        </button>
+                        }}
+                        action= {
+                            <Button id="chat" onClick={() => {
+                                this.send(this.state.message)
+                                this.setState({
+                                    message:""
+                                })
+                            }}>
+                            Chat
+                            </Button>
+                        } />
+
                         </div>
-                    <div className = "messageContainer" id="container">
+                    <Feed className = "messageContainer" id="container">
                         {messages}
-                    </div>
+                    </Feed>
                 </div>
             </div>
         )

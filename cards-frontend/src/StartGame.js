@@ -2,7 +2,7 @@ import React, {
     Component
 } from 'react';
 
-import Button from '@material-ui/core/Button';
+import { Button } from 'semantic-ui-react';
 
 class StartGame extends Component {
 
@@ -11,7 +11,7 @@ class StartGame extends Component {
             return(<div  style={{gridColumn:2, gridRow:2, alignSelf:'center', justifySelf:'center',
                                 display:'flex', flexDirection:'column', alignItems:'center'}} >
                 <p> You're the host. Start the game once all players have entered the room. </p>
-                <Button style={{ maxWidth:'200px', maxHeight:'200px'}} variant='contained' onClick = {() => {this.props.startGame()}}>
+                <Button style={{ maxWidth:'200px', maxHeight:'200px'}} onClick = {() => {this.props.startGame()}}>
                     Start game
                 </Button>
                 </div>
