@@ -10,6 +10,13 @@ app.get('/', function(req, res) {
     res.send('<h1>Hello world </h1>')
 });
 
+class Vote {
+    Vote(id){
+        this.id = id
+        this.vote = false
+    }
+}
+
 io.on('connection', function(socket) {
     console.log(socket.id,'connected')
     socket.on('disconnect', function(){
@@ -20,7 +27,8 @@ io.on('connection', function(socket) {
         socket.in(msg.room).emit('Chatmessage', {
             'name': msg.name,
             'room': msg.room,
-            'content': msg.content
+            'content': msg.content,
+            'id':msg.id,
         })
     });
 
@@ -31,7 +39,8 @@ io.on('connection', function(socket) {
         }
         console.log('Create room: ',socket.id,':', result)
         rooms[result] = {
-            users:[]
+            users:[],
+            votes:[]
         }
         callback(result)
     })
@@ -40,16 +49,18 @@ io.on('connection', function(socket) {
         socket.join(msg.room)
         if (!(msg.room in rooms)){
             rooms[msg.room] = {
-                users:[]
+                users:[],
+                votes:{}
             }
         }
         rooms[msg.room].users = rooms[msg.room].users.concat([msg])
+        rooms[msg.room].votes[msg.id] = false;
+        console.log(rooms[msg.room].votes)
         console.log(msg.name, " joined ", msg.room)
         io.in(msg.room).emit('user_joined', rooms[msg.room] )
     })
 
     socket.on('card_to_server', function(msg) {
-        // console.log(msg)
         socket.in(msg.room).emit('card_from_server', {card:msg.card, user: socket.id})
     })
 
@@ -57,8 +68,14 @@ io.on('connection', function(socket) {
         socket.in(msg.room).emit('remove_card', {card:msg.card, user: socket.id})
     })
 
+    socket.on('vote', function(msg) {
+        rooms[msg.room].votes[msg.id] = msg.vote;
+        let result = Object.values(rooms[msg.room].votes).reduce((total, num) => {return total + (num ? 1 : 0)})
+        result = result + 0;
+        io.in(msg.room).emit('vote_update', {result: result })
+    })
     socket.on('game_start', function(msg) {
-        let scenarioCards = ['C1', 'C2', 'C3', 'C4', 'C5', 'C6'];
+        let scenarioCards = msg.deck;
         let users = rooms[msg.room].users;
         let counter = 0;
         let decks = users.map(item => {
@@ -73,6 +90,11 @@ io.on('connection', function(socket) {
         }
         console.log(decks);
         io.in(msg.room).emit('start_game', {scenario:msg.scenario, decks:decks})
+    })
+    socket.on('end_game', function(msg) {
+        console.log("End game", msg)
+        let feedback = msg.serverDeck.map(item => {return {title:item.title, feedback:item.feedback}})
+        io.in(msg.room).emit('round_end', {feedback: feedback})
     })
 });
 

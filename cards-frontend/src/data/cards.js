@@ -1,9 +1,16 @@
 const scenarios = {
-    's1':{
+    'S1':{
         id:"S1",
         title:"Picture sharing",
-        description:"Someone shared a picture fo you that you are not comfortable with being shared."
+        description:"Someone shared a picture fo you that you are not comfortable with being shared.",
+        cards:['C1', 'C2', 'C3', 'C4', 'C5', 'C6']
     },
+    'S2':{
+        id:'S2',
+        title:'Scenario 2',
+        description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+        cards:['C7']
+    }
 }
 
 const cards = [
@@ -51,6 +58,13 @@ const cards = [
         description:"Tell everyone you know so that they can help you get it removed.",
         feedback:"Receiving a torrent of request from many people to remove something will definitely have an effect, " +
             "but will you be responsible for what everyone you know says to this person in anger?"
+    },
+    {
+        id:"C7",
+        scenario:"2",
+        title: "Card C7",
+        description:"Card description goes here",
+        feedback:"Feedback for card C7",
     },
 ]
 
