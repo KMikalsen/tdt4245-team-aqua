@@ -6,7 +6,8 @@ html, body {
 
 .App{
     /* background-color: #0c0b0f; */
-    color: #04f992;
+    /* color: #04f992; */
+    color:#00b5ad;
     min-height:100vh;
     display: grid;
     grid-template-columns:30px 42vw auto;

@@ -4,6 +4,12 @@ import React, {
 import {Segment, Table, Header} from 'semantic-ui-react';
 
 class Results extends Component {
+    componentDidMount() {
+        this.props.resetCounter();
+    }
+    componentDidUpdate() {
+        this.props.resetCounter();
+    }
     render(){
         console.log("feedback", this.props.feedback)
         const feedback = this.props.feedback.map(item => {

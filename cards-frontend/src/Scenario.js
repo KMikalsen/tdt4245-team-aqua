@@ -12,7 +12,7 @@ class Scenario extends Component {
         const users = this.props.users.map(item => {
             return(<List.Item>
                     <Image avatar src={'https://ui-avatars.com/api/?name=' + item.name[0]}/>
-                    <List.Content>
+                    <List.Content verticalAlign="middle">
                         <List.Header>
                             {item.name}
                         </List.Header>
@@ -33,7 +33,7 @@ class Scenario extends Component {
                     <h1>{this.props.scenario.title}</h1>
                     {this.props.scenario.description}
                 </div>
-                <List divided className ="userContainer">
+                <List className ="userContainer">
                     {users}
                 </List>
                 <StartGame gameStarted={this.props.gameStarted} host={this.props.host} startGame={this.props.startGame}/>

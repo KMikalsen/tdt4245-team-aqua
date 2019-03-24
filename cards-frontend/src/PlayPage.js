@@ -19,6 +19,7 @@ class PlayPage extends Component {
         this.cardClick = this.cardClick.bind(this);
         this.removeCard = this.removeCard.bind(this);
         this.startGame = this.startGame.bind(this);
+        this.resetCounter = this.resetCounter.bind(this);
         this.endGame = this.endGame.bind(this);
         this.vote = this.vote.bind(this);
         this.state = {
@@ -29,6 +30,7 @@ class PlayPage extends Component {
             playerDeck:[],
             serverDeck:[],
             voteCount:0,
+            unreadCounter:0,
             vote:false,
             feedback:[],
         }
@@ -67,6 +69,7 @@ class PlayPage extends Component {
                 playerDeck:[],
                 serverDeck:[],
                 gameStarted: false,
+                unreadCounter: that.state.unreadCounter + 1,
                 feedback: that.state.feedback.concat(msg)
             }, () => {
                 console.log(that.state)
@@ -93,14 +96,18 @@ class PlayPage extends Component {
         let container = document.getElementById('container')
         container.scrollTop = container.scrollHeight - container.clientHeight;
     }
-
     send(msg) {
         this.props.socket.emit('Chatmessage', {'name':this.props.name, 'room':this.props.room,'id':this.props.socket.id, 'content': msg})
         this.setState({
             messages: this.state.messages.concat([{'name':this.props.name, 'room':this.props.room, id: this.props.socket.id, 'content': msg}])
         })
     }
-
+    resetCounter(){
+        if (this.state.unreadCounter !== 0)
+            this.setState({
+                unreadCounter: 0
+            })
+    }
     vote() {
         this.setState(prevState => ({
             vote: !prevState.vote,
@@ -163,17 +170,17 @@ class PlayPage extends Component {
             )
         })
         const scenario = (
-            <Scenario scenario = {this.state.scenario} users={this.props.users} gameStarted = {this.state.gameStarted}
+            <Scenario ref="test" scenario = {this.state.scenario} users={this.props.users} gameStarted = {this.state.gameStarted}
                         host = {this.props.host} startGame = {this.startGame} serverDeck = {this.state.serverDeck}
                         vote = {this.state.vote} voteFunc = {this.vote} endGame={this.endGame} voteCount = {this.state.voteCount}
                         removeCard = {this.removeCard} id={this.props.id} />
         )
         const results = (
-            <Results feedback = {this.state.feedback} />
+            <Results feedback = {this.state.feedback} resetCounter={this.resetCounter} />
         )
         const panes = [
             {menuItem:'Game', render: () => <Tab.Pane style={{height:'95%', padding:'0'}}> {scenario} </Tab.Pane>},
-            {menuItem: (<Menu.Item key="results"> Results <Label color="blue">{this.state.feedback.length}</Label></Menu.Item>), render: () => <Tab.Pane style={{height:'95%', padding:'0'}}> {results} </Tab.Pane>}
+            {menuItem: (<Menu.Item key="results"> Results {this.state.unreadCounter > 0 ? <Label color="teal">{this.state.unreadCounter}</Label> : null}</Menu.Item>), render: () => <Tab.Pane style={{height:'95%', padding:'0'}}> {results} </Tab.Pane>}
         ]
         if (!this.props.joined){
             return (
@@ -206,7 +213,7 @@ class PlayPage extends Component {
                             })
                         }}
                         action= {
-                            <Button id="chat" onClick={() => {
+                            <Button id="chat" color="teal" invert onClick={() => {
                                 this.send(this.state.message)
                                 this.setState({
                                     message:""

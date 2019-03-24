@@ -13,6 +13,7 @@ class FrontPage extends Component {
         }
         const joinButton = (
             <Button style={{visibility:this.props.name ? 'visible':'hidden'}}
+                    color="teal" invert
                     onClick={this.props.join_room}>
                 Join Room
             </Button>
@@ -48,7 +49,7 @@ class FrontPage extends Component {
                 </div>
                 <div className = "buttonContainer" id = "createRoom" style={{visibility:this.props.name ? 'visible':'hidden' }}>
                 <Divider />
-                    <Button onClick={this.props.create_room}>
+                    <Button onClick={this.props.create_room} color="teal" invert>
                         Create Room
                     </Button>
                 <Divider horizontal>Or</Divider>
