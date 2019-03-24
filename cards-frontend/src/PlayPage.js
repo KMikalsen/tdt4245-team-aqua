@@ -8,6 +8,7 @@ import GameCard from './GameCard.js';
 import Scenario from './Scenario.js';
 import { Button, Menu, List, Image, Input, Comment, Tab, Label } from 'semantic-ui-react';
 import StartGame from './StartGame.js';
+import Results from './Results.js';
 
 const MAXLEN = 2;
 
@@ -34,13 +35,6 @@ class PlayPage extends Component {
     }
 
     componentDidMount() {
-        // this.setState({
-        //     scenario:scenarios.s1
-        // })
-        // this.setState({
-        //     playerDeck:cards
-        // })
-
         let that = this;
         this.props.socket.on('Chatmessage', function(msg) {
             console.log("got message")
@@ -175,12 +169,11 @@ class PlayPage extends Component {
                         removeCard = {this.removeCard} id={this.props.id} />
         )
         const results = (
-            <div >
-            </div>
+            <Results feedback = {this.state.feedback} />
         )
         const panes = [
             {menuItem:'Game', render: () => <Tab.Pane style={{height:'95%', padding:'0'}}> {scenario} </Tab.Pane>},
-            {menuItem: (<Menu.Item key="results"> Results <Label>0</Label></Menu.Item>), render: () => <Tab.Pane style={{height:'95%', padding:'0'}}> {results} </Tab.Pane>}
+            {menuItem: (<Menu.Item key="results"> Results <Label color="blue">{this.state.feedback.length}</Label></Menu.Item>), render: () => <Tab.Pane style={{height:'95%', padding:'0'}}> {results} </Tab.Pane>}
         ]
         if (!this.props.joined){
             return (

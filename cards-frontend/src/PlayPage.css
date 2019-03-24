@@ -50,6 +50,13 @@
     grid-template-rows: 1fr 1fr 1fr;
     height:100%;
 }
+.resultsContent {
+    display:flex;
+    flex-direction: column;
+    height:100%;
+    padding: 10px 10px 0 10px;
+    overflow: auto;
+}
 .serverDeck {
     grid-column: 1/4;
     grid-row: 2;
