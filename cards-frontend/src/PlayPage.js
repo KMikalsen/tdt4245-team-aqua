@@ -5,7 +5,8 @@ import {Redirect} from 'react-router-dom';
 import './PlayPage.css';
 import {scenarios, cards} from './data/cards.js';
 import GameCard from './GameCard.js';
-import { Button, Menu, List, Image, Input, Feed } from 'semantic-ui-react';
+import Scenario from './Scenario.js';
+import { Button, Menu, List, Image, Input, Comment, Tab, Label } from 'semantic-ui-react';
 import StartGame from './StartGame.js';
 
 const MAXLEN = 2;
@@ -17,6 +18,7 @@ class PlayPage extends Component {
         this.cardClick = this.cardClick.bind(this);
         this.removeCard = this.removeCard.bind(this);
         this.startGame = this.startGame.bind(this);
+        this.endGame = this.endGame.bind(this);
         this.vote = this.vote.bind(this);
         this.state = {
             message: "",
@@ -27,6 +29,7 @@ class PlayPage extends Component {
             serverDeck:[],
             voteCount:0,
             vote:false,
+            feedback:[],
         }
     }
 
@@ -61,6 +64,18 @@ class PlayPage extends Component {
         this.props.socket.on('vote_update', function(msg) {
             that.setState({
                 voteCount: msg.result
+            })
+        })
+
+        this.props.socket.on('round_end', function(msg) {
+            console.log("round end", msg)
+            that.setState({
+                playerDeck:[],
+                serverDeck:[],
+                gameStarted: false,
+                feedback: that.state.feedback.concat(msg)
+            }, () => {
+                console.log(that.state)
             })
         })
 
@@ -128,44 +143,45 @@ class PlayPage extends Component {
     startGame() {
         this.props.socket.emit('game_start', {room:this.props.room, scenario:1})
     }
+    endGame() {
+
+        this.props.socket.emit('end_game', {room:this.props.room, serverDeck: this.state.serverDeck})
+    }
 
     render(){
         const messages = this.state.messages.map(item => {
             return(
-                <Feed.Event>
-                    <Feed.Label image ={'https://ui-avatars.com/api/?name=' + item.name[0]} />
-                    <Feed.Content>
-                        <Feed.Summary>
-                            {item.name}
-                        </Feed.Summary>
-                        <Feed.Extra text>
-                            {item.content}
-                        </Feed.Extra>
-                    </Feed.Content>
-                </Feed.Event>
+                <Comment>
+                    <Comment.Avatar src ={'https://ui-avatars.com/api/?name=' + item.name[0]} />
+                    <Comment.Content>
+                        <Comment.Author as='a'>{item.name}</Comment.Author>
+                    <Comment.Metadata>
+                      <div>{this.props.users.filter(user => {return item.id === user.id && user.host }).length > 0 ? "Host" : null}</div>
+                    </Comment.Metadata>
+                    <Comment.Text>{item.content}</Comment.Text>
+                    </Comment.Content>
+                </Comment>
             )
         })
-        const users = this.props.users.map(item => {
-            return(<List.Item>
-                    <Image avatar src={'https://ui-avatars.com/api/?name=' + item.name[0]}/>
-                    <List.Content>
-                        <List.Header>
-                            {item.name}
-                        </List.Header>
-                        {item.host ? 'Host' : null}
-                    </List.Content>
-                </List.Item>)
-            })
         const playerDeck = this.state.playerDeck.map(item => {
             return(
                 <GameCard id={item.id} title={item.title} description={item.description} onclick={this.cardClick}/>
             )
         })
-        const serverDeck = this.state.serverDeck.map(item => {
-            return(
-                <GameCard id={item.id} title={item.title} description={item.description} onclick = {null} removeable={true} removeCard = {this.removeCard} />
-            )
-        })
+        const scenario = (
+            <Scenario scenario = {this.state.scenario} users={this.props.users} gameStarted = {this.state.gameStarted}
+                        host = {this.props.host} startGame = {this.startGame} serverDeck = {this.state.serverDeck}
+                        vote = {this.state.vote} voteFunc = {this.vote} endGame={this.endGame} voteCount = {this.state.voteCount}
+                        removeCard = {this.removeCard} id={this.props.id} />
+        )
+        const results = (
+            <div >
+            </div>
+        )
+        const panes = [
+            {menuItem:'Game', render: () => <Tab.Pane style={{height:'95%', padding:'0'}}> {scenario} </Tab.Pane>},
+            {menuItem: (<Menu.Item key="results"> Results <Label>0</Label></Menu.Item>), render: () => <Tab.Pane style={{height:'95%', padding:'0'}}> {results} </Tab.Pane>}
+        ]
         if (!this.props.joined){
             return (
                 <Redirect to="/" />
@@ -178,33 +194,8 @@ class PlayPage extends Component {
                     <Menu.Item name={this.props.room} />
                 </Menu>
 
-                <div className = "scenario">
-                    <div className ="scenarioContainer">
-                        <h1>{this.state.scenario.title}</h1>
-                        {this.state.scenario.description}
-                    </div>
-                    <List divided className ="userContainer">
-                        {users}
-                    </List>
-                    <StartGame gameStarted={this.state.gameStarted} host={this.props.host} startGame={this.startGame}/>
-                    <div className = "playInfo" style={{visibility:this.state.gameStarted ? 'visible': 'hidden'}}>
-                        {this.state.serverDeck.length} of {MAXLEN} cards in play.
-                     </div>
-                    <div className = "serverDeck">
-                        {serverDeck}
-                    </div>
-                    <div  className = "voteResultContainer" style={{visibility:this.state.gameStarted ? 'visible': 'hidden'}}>
-                        <Button style={{backgroundColor: this.state.vote ? '#51D88A': '#d5d5d5', visibility:this.state.gameStarted ? 'visible': 'hidden'}}variant = "contained" onClick = {() => {
-                            this.vote();
-                        }}>
-                        👍
-                        </Button>
-                        <p> {this.state.voteCount} of {this.props.users.length} players agree </p>
-                        <Button style={{visibility:(this.props.host && this.state.gameStarted && (this.state.voteCount === this.props.users.length) && (this.state.serverDeck.length > 0)) ? 'visible': 'hidden'}} variant='contained' onClick = {() => {}}>
-                            End turn
-                        </Button>
-                    </div>
-                </div>
+                <Tab className="scenario" panes={panes}/>
+
                 <div className = "deck">
                     {playerDeck}
                 </div>
@@ -233,9 +224,9 @@ class PlayPage extends Component {
                         } />
 
                         </div>
-                    <Feed className = "messageContainer" id="container">
+                    <Comment.Group className = "messageContainer" id="container">
                         {messages}
-                    </Feed>
+                    </Comment.Group>
                 </div>
             </div>
         )

@@ -27,7 +27,8 @@ io.on('connection', function(socket) {
         socket.in(msg.room).emit('Chatmessage', {
             'name': msg.name,
             'room': msg.room,
-            'content': msg.content
+            'content': msg.content,
+            'id':msg.id,
         })
     });
 
@@ -89,6 +90,11 @@ io.on('connection', function(socket) {
         }
         console.log(decks);
         io.in(msg.room).emit('start_game', {scenario:msg.scenario, decks:decks})
+    })
+    socket.on('end_game', function(msg) {
+        console.log("End game", msg)
+        let feedback = msg.serverDeck.map(item => {return {title:item.title, feedback:item.feedback}})
+        io.in(msg.room).emit('round_end', {feedback: feedback})
     })
 });
 
