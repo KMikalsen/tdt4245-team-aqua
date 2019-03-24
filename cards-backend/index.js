@@ -75,7 +75,7 @@ io.on('connection', function(socket) {
         io.in(msg.room).emit('vote_update', {result: result })
     })
     socket.on('game_start', function(msg) {
-        let scenarioCards = ['C1', 'C2', 'C3', 'C4', 'C5', 'C6'];
+        let scenarioCards = msg.deck;
         let users = rooms[msg.room].users;
         let counter = 0;
         let decks = users.map(item => {

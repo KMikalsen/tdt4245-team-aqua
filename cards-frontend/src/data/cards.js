@@ -1,11 +1,11 @@
 const scenarios = {
-    's1':{
+    'S1':{
         id:"S1",
         title:"Picture sharing",
         description:"Someone shared a picture fo you that you are not comfortable with being shared.",
         cards:['C1', 'C2', 'C3', 'C4', 'C5', 'C6']
     },
-    's2':{
+    'S2':{
         id:'S2',
         title:'Scenario 2',
         description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',

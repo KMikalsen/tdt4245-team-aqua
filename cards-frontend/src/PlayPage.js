@@ -62,7 +62,7 @@ class PlayPage extends Component {
         })
 
         this.props.socket.on('round_end', function(msg) {
-            console.log("round end", msg)
+            that.vote()
             that.setState({
                 playerDeck:[],
                 serverDeck:[],
@@ -82,7 +82,7 @@ class PlayPage extends Component {
                 playerDeck: cards.filter(item =>{
                     return deck.includes(item.id)
                 }),
-                scenario:scenarios["s"+msg.scenario],
+                scenario:scenarios[msg.scenario],
                 gameStarted : true,
             })
         })
@@ -134,11 +134,11 @@ class PlayPage extends Component {
         this.props.socket.emit('request_remove', {card: id, room:this.props.room})
     }
 
-    startGame() {
-        this.props.socket.emit('game_start', {room:this.props.room, scenario:1})
+    startGame(scenario) {
+        console.log(scenario)
+        this.props.socket.emit('game_start', {room:this.props.room, scenario:scenario, deck:scenarios[scenario].cards})
     }
     endGame() {
-
         this.props.socket.emit('end_game', {room:this.props.room, serverDeck: this.state.serverDeck})
     }
 
