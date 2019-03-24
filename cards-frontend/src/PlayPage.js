@@ -5,7 +5,10 @@ import {Redirect} from 'react-router-dom';
 import './PlayPage.css';
 import {scenarios, cards} from './data/cards.js';
 import GameCard from './GameCard.js';
+import Scenario from './Scenario.js';
+import { Button, Menu, List, Image, Input, Comment, Tab, Label } from 'semantic-ui-react';
 import StartGame from './StartGame.js';
+import Results from './Results.js';
 
 const MAXLEN = 2;
 
@@ -16,6 +19,9 @@ class PlayPage extends Component {
         this.cardClick = this.cardClick.bind(this);
         this.removeCard = this.removeCard.bind(this);
         this.startGame = this.startGame.bind(this);
+        this.resetCounter = this.resetCounter.bind(this);
+        this.endGame = this.endGame.bind(this);
+        this.vote = this.vote.bind(this);
         this.state = {
             message: "",
             gameStarted:false,
@@ -23,17 +29,14 @@ class PlayPage extends Component {
             scenario:{},
             playerDeck:[],
             serverDeck:[],
+            voteCount:0,
+            unreadCounter:0,
+            vote:false,
+            feedback:[],
         }
     }
 
     componentDidMount() {
-        // this.setState({
-        //     scenario:scenarios.s1
-        // })
-        // this.setState({
-        //     playerDeck:cards
-        // })
-
         let that = this;
         this.props.socket.on('Chatmessage', function(msg) {
             console.log("got message")
@@ -54,6 +57,25 @@ class PlayPage extends Component {
             })
         })
 
+        this.props.socket.on('vote_update', function(msg) {
+            that.setState({
+                voteCount: msg.result
+            })
+        })
+
+        this.props.socket.on('round_end', function(msg) {
+            that.vote()
+            that.setState({
+                playerDeck:[],
+                serverDeck:[],
+                gameStarted: false,
+                unreadCounter: that.state.unreadCounter + 1,
+                feedback: that.state.feedback.concat(msg)
+            }, () => {
+                console.log(that.state)
+            })
+        })
+
         this.props.socket.on('start_game', function(msg) {
             let deck = msg.decks.find(obj => {
                 return obj.uid === that.props.socket.id
@@ -63,7 +85,7 @@ class PlayPage extends Component {
                 playerDeck: cards.filter(item =>{
                     return deck.includes(item.id)
                 }),
-                scenario:scenarios["s"+msg.scenario],
+                scenario:scenarios[msg.scenario],
                 gameStarted : true,
             })
         })
@@ -74,11 +96,27 @@ class PlayPage extends Component {
         let container = document.getElementById('container')
         container.scrollTop = container.scrollHeight - container.clientHeight;
     }
-
     send(msg) {
         this.props.socket.emit('Chatmessage', {'name':this.props.name, 'room':this.props.room,'id':this.props.socket.id, 'content': msg})
         this.setState({
             messages: this.state.messages.concat([{'name':this.props.name, 'room':this.props.room, id: this.props.socket.id, 'content': msg}])
+        })
+    }
+    resetCounter(){
+        if (this.state.unreadCounter !== 0)
+            this.setState({
+                unreadCounter: 0
+            })
+    }
+    vote() {
+        this.setState(prevState => ({
+            vote: !prevState.vote,
+        }), () => {
+            this.props.socket.emit('vote', {
+                id:this.props.socket.id,
+                room:this.props.room,
+                vote:this.state.vote,
+            })
         })
     }
 
@@ -103,31 +141,47 @@ class PlayPage extends Component {
         this.props.socket.emit('request_remove', {card: id, room:this.props.room})
     }
 
-    startGame() {
-        this.props.socket.emit('game_start', {room:this.props.room, scenario:1})
+    startGame(scenario) {
+        console.log(scenario)
+        this.props.socket.emit('game_start', {room:this.props.room, scenario:scenario, deck:scenarios[scenario].cards})
+    }
+    endGame() {
+        this.props.socket.emit('end_game', {room:this.props.room, serverDeck: this.state.serverDeck})
     }
 
     render(){
         const messages = this.state.messages.map(item => {
-            let cName = "message "
-            cName += item.id === this.props.socket.id ? "selfMessage" : ""
-            return(<div className = {cName}> <span className="messageName">{item.name}</span>: {item.content}</div>)
-        })
-        const users = this.props.users.map(item => {
-            return(<div>
-                {item.host ? '⭐' : null}{item.name} {item.id === this.props.socket.id ? '(you)' : null}
-            </div>)
+            return(
+                <Comment>
+                    <Comment.Avatar src ={'https://ui-avatars.com/api/?name=' + item.name[0]} />
+                    <Comment.Content>
+                        <Comment.Author as='a'>{item.name}</Comment.Author>
+                    <Comment.Metadata>
+                      <div>{this.props.users.filter(user => {return item.id === user.id && user.host }).length > 0 ? "Host" : null}</div>
+                    </Comment.Metadata>
+                    <Comment.Text>{item.content}</Comment.Text>
+                    </Comment.Content>
+                </Comment>
+            )
         })
         const playerDeck = this.state.playerDeck.map(item => {
             return(
                 <GameCard id={item.id} title={item.title} description={item.description} onclick={this.cardClick}/>
             )
         })
-        const serverDeck = this.state.serverDeck.map(item => {
-            return(
-                <GameCard id={item.id} title={item.title} description={item.description} onclick = {null} removeable={true} removeCard = {this.removeCard} />
-            )
-        })
+        const scenario = (
+            <Scenario ref="test" scenario = {this.state.scenario} users={this.props.users} gameStarted = {this.state.gameStarted}
+                        host = {this.props.host} startGame = {this.startGame} serverDeck = {this.state.serverDeck}
+                        vote = {this.state.vote} voteFunc = {this.vote} endGame={this.endGame} voteCount = {this.state.voteCount}
+                        removeCard = {this.removeCard} id={this.props.id} />
+        )
+        const results = (
+            <Results feedback = {this.state.feedback} resetCounter={this.resetCounter} />
+        )
+        const panes = [
+            {menuItem:'Game', render: () => <Tab.Pane style={{height:'95%', padding:'0'}}> {scenario} </Tab.Pane>},
+            {menuItem: (<Menu.Item key="results"> Results {this.state.unreadCounter > 0 ? <Label color="teal">{this.state.unreadCounter}</Label> : null}</Menu.Item>), render: () => <Tab.Pane style={{height:'95%', padding:'0'}}> {results} </Tab.Pane>}
+        ]
         if (!this.props.joined){
             return (
                 <Redirect to="/" />
@@ -135,29 +189,19 @@ class PlayPage extends Component {
         }
         return(
             <div className = "playArea">
-                <div className = "header">
-                {this.props.room}
-                </div>
-                <div className = "scenario">
-                    <div className ="scenarioContainer">
-                        <h1>{this.state.scenario.title}</h1>
-                        {this.state.scenario.description}
-                    </div>
-                    <div className ="userContainer">
-                        <span style={{fontWeight:'bold'}}>Users:</span>
-                        {users}
-                    </div>
-                    <StartGame gameStarted={this.state.gameStarted} host={this.props.host} startGame={this.startGame}/>
-                    <div className = "serverDeck">
-                        {serverDeck}
-                    </div>
-                </div>
+                <Menu className = "header">
+                    <Menu.Item header> Privacy. </Menu.Item>
+                    <Menu.Item name={this.props.room} />
+                </Menu>
+
+                <Tab className="scenario" panes={panes}/>
+
                 <div className = "deck">
                     {playerDeck}
                 </div>
                 <div className = "chat">
                     <div className = "sendContainer">
-                        <input  className = "chatInput" type="text" placeholder="Enter message..."
+                        <Input fluid placeholder="Enter message..."
                         onKeyDown ={(event) => {
                             if (event.keyCode == 13){
                                 document.getElementById('chat').click()
@@ -167,19 +211,22 @@ class PlayPage extends Component {
                             this.setState({
                                 message:event.target.value
                             })
-                        }} />
-                        <button className = "chatSend" id="chat" style={{visibility:this.props.name ? 'visible':'hidden' }} onClick={() => {
-                            this.send(this.state.message)
-                            this.setState({
-                                message:""
-                            })
-                        }}>
-                        Chat
-                        </button>
+                        }}
+                        action= {
+                            <Button id="chat" color="teal" invert onClick={() => {
+                                this.send(this.state.message)
+                                this.setState({
+                                    message:""
+                                })
+                            }}>
+                            Chat
+                            </Button>
+                        } />
+
                         </div>
-                    <div className = "messageContainer" id="container">
+                    <Comment.Group className = "messageContainer" id="container">
                         {messages}
-                    </div>
+                    </Comment.Group>
                 </div>
             </div>
         )

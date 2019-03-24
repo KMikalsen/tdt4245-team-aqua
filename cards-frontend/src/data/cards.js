@@ -1,16 +1,16 @@
 const scenarios = {
-    's1':{
+    'S1':{
         id:"S1",
         title:"Picture sharing",
         description:"Someone shared a picture fo you that you are not comfortable with being shared.",
-        cardIDs:["C1", "C2", "C3", "C4", "C4", "C5", "C6"]
+        cards:["C1", "C2", "C3", "C4", "C4", "C5", "C6"]
     },
-    's2':{
+    'S2':{
         id:"S2",
         title:"Friend request",
         description:"You received a friend request from someone you don't know.",
-        cardIDs:["C7", "C8", "C9", "C10", "C11"]
-    }
+        cards:["C7", "C8", "C9", "C10", "C11"]
+    },
 }
 
 const cards = [
