@@ -2,7 +2,7 @@ import React, {
     Component
 } from 'react';
 
-import { Button, Card, List, Image } from 'semantic-ui-react';
+import { Button, Card, List, Image, Icon, Label } from 'semantic-ui-react';
 import GameCard from './GameCard.js';
 import StartGame from './StartGame.js';
 
@@ -11,7 +11,7 @@ class Scenario extends Component {
     render(){
         const users = this.props.users.map(item => {
             return(<List.Item>
-                    <Image avatar src={'https://ui-avatars.com/api/?name=' + item.name[0]}/>
+                    <Image avatar style={{borderRadius:'.25rem'}} square src={'https://ui-avatars.com/api/?background='+item.color+'&color=fff&name='+item.name}/>
                     <List.Content verticalAlign="middle">
                         <List.Header>
                             {item.name}
@@ -22,8 +22,9 @@ class Scenario extends Component {
             })
 
             const serverDeck = this.props.serverDeck.map(item => {
+                console.log(this.props.users, this.props.users.filter(user=>{return user.id === item.owner}))
                 return(
-                    <GameCard id={item.id} title={item.title} description={item.description} onclick = {null} removeable={true} removeCard = {this.props.removeCard} />
+                    <GameCard owner={this.props.users.filter(user=>{return user.id === item.owner})[0]} id={item.id} title={item.title} description={item.description} onclick = {null} removeable={item.removeable} removeCard = {this.props.removeCard} serverDeck={true}/>
                 )
             })
 
@@ -44,12 +45,16 @@ class Scenario extends Component {
                     {serverDeck}
                 </div>
                 <div  className = "voteResultContainer" style={{visibility:this.props.gameStarted ? 'visible': 'hidden'}}>
-                    <Button style={{backgroundColor: this.props.vote ? '#51D88A': '#d5d5d5', visibility:this.props.gameStarted ? 'visible': 'hidden'}}variant = "contained" onClick = {() => {
+                    <Button as='div' labelPosition='right' style={{visibility:this.props.gameStarted ? 'visible': 'hidden'}} onClick = {() => {
                         this.props.voteFunc();
                     }}>
-                    👍
+                    <Button icon basic  color={this.props.vote ? 'green': 'red' }>
+                        <Icon size="large" name="thumbs up outline" />
                     </Button>
-                    <p> {this.props.voteCount} of {this.props.users.length} players agree </p>
+                    <Label pointing='left' basic color={this.props.voteCount === this.props.users.length ? 'green': 'red' }>
+                        {this.props.voteCount} / {this.props.users.length}
+                    </Label>
+                    </Button>
                     <Button style={{visibility:(this.props.host && this.props.gameStarted && (this.props.voteCount === this.props.users.length) && (this.props.serverDeck.length > 0)) ? 'visible': 'hidden'}} variant='contained' onClick = {() => {this.props.endGame()}}>
                     End turn
                     </Button>

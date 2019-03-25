@@ -2,7 +2,7 @@ import React, {
     Component
 } from 'react';
 
-import { Button, Card } from 'semantic-ui-react';
+import { Button, Card, Label } from 'semantic-ui-react';
 
 const styles = {
     card: {
@@ -16,9 +16,13 @@ class GameCard extends Component {
 
 
     render(){
-        const removeBtn = this.props.removeable ? (
+        const removeBtn = this.props.serverDeck ? (
             <Card.Content extra>
-                <Button size="mini" basic compact onClick = {() => {this.props.removeCard(this.props.id)}}>Remove</Button>
+                {this.props.removeable ? (<Button size="mini" basic compact onClick = {() => {this.props.removeCard(this.props.id)}}>Remove</Button>) :
+                (<Label size="mini" color='teal'>
+                {this.props.owner.name}
+                <Label.Detail>Owner</Label.Detail>
+                </Label>)}
             </Card.Content>) : null;
 
         return(

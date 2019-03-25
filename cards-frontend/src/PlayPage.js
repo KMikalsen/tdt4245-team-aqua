@@ -45,7 +45,9 @@ class PlayPage extends Component {
             })
         })
         this.props.socket.on('card_from_server', function(msg) {
-            let card = cards.filter(item => {return item.id === msg.card})
+            let card = JSON.parse(JSON.stringify(cards.filter(item => {return item.id === msg.card})))
+            card[0].removeable = false;
+            card[0].owner = msg.user;
             that.setState({
                 serverDeck: that.state.serverDeck.concat(card)
             })
@@ -125,7 +127,9 @@ class PlayPage extends Component {
             return
         this.props.socket.emit('card_to_server', {card: event.currentTarget.id, room:this.props.room})
 
-        let card = cards.filter(item => {return item.id === event.currentTarget.id})
+        let card = JSON.parse(JSON.stringify(cards.filter(item => {return item.id === event.currentTarget.id})))
+        card[0].removeable = true;
+        card[0].owner = this.props.socket.id;
         this.setState({
             playerDeck: this.state.playerDeck.filter(item => { return item.id !== event.currentTarget.id }),
             serverDeck: this.state.serverDeck.concat(card)
@@ -153,7 +157,7 @@ class PlayPage extends Component {
         const messages = this.state.messages.map(item => {
             return(
                 <Comment>
-                    <Comment.Avatar src ={'https://ui-avatars.com/api/?name=' + item.name[0]} />
+                    <Comment.Avatar src={'https://ui-avatars.com/api/?background='+this.props.users.filter(user => {return item.id === user.id})[0].color+'&color=fff&name='+item.name} />
                     <Comment.Content>
                         <Comment.Author as='a'>{item.name}</Comment.Author>
                     <Comment.Metadata>

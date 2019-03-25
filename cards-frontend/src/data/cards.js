@@ -3,7 +3,7 @@ const scenarios = {
         id:"S1",
         title:"Picture sharing",
         description:"Someone shared a picture fo you that you are not comfortable with being shared.",
-        cards:["C1", "C2", "C3", "C4", "C4", "C5", "C6"]
+        cards:["C1", "C2", "C3", "C4", "C5", "C6"]
     },
     'S2':{
         id:"S2",
