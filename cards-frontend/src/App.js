@@ -6,7 +6,7 @@ import './App.css';
 import FrontPage from './FrontPage.js';
 import PlayPage from './PlayPage.js';
 import io from 'socket.io-client'
-var socket = io.connect('http://10.22.3.67:8000', {
+var socket = io.connect('http://localhost:8000', {
     resource: 'nodejs'
 })
 

@@ -3,6 +3,19 @@ import React, {
 } from 'react';
 import {Segment, Table, Header} from 'semantic-ui-react';
 
+const feedbackcolor = (color) => {
+    switch (color) {
+        case "red":
+            return "negative";
+            break;
+        case "green":
+            return "positive";
+            break;
+        default:
+            return "warning";
+    }
+}
+
 class Results extends Component {
     render(){
         console.log("feedback", this.props.feedback)
@@ -25,14 +38,14 @@ class Results extends Component {
                     {item.feedback.map(cardItem=>{
                         return (
                             <Table.Row>
-                               <Table.Cell>
+                               <Table.Cell className={feedbackcolor(cardItem.color)}>
                                  <Header as='h4'>
                                    <Header.Content>
                                      {cardItem.title}
                                    </Header.Content>
                                  </Header>
                                </Table.Cell>
-                               <Table.Cell>{cardItem.feedback}</Table.Cell>
+                               <Table.Cell className={feedbackcolor(cardItem.color)} >{cardItem.feedback}</Table.Cell>
                             </Table.Row>
                         )
                     })}
