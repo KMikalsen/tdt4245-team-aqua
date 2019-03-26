@@ -8,6 +8,12 @@ import StartGame from './StartGame.js';
 
 const MAXLEN = 2;
 class Scenario extends Component {
+    componentDidUpdate() {
+        this.props.resetCounter();
+    }
+    componentDidMount() {
+        this.props.resetCounter();
+    }
     render(){
         const users = this.props.users.map(item => {
             return(<List.Item>

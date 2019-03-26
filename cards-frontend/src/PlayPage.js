@@ -45,6 +45,9 @@ class PlayPage extends Component {
             })
         })
         this.props.socket.on('card_from_server', function(msg) {
+            that.setState({
+                unreadCounter: that.state.unreadCounter + 1,
+            })
             let card = JSON.parse(JSON.stringify(cards.filter(item => {return item.id === msg.card})))
             card[0].removeable = false;
             card[0].owner = msg.user;
@@ -71,7 +74,6 @@ class PlayPage extends Component {
                 playerDeck:[],
                 serverDeck:[],
                 gameStarted: false,
-                unreadCounter: that.state.unreadCounter + 1,
                 feedback: that.state.feedback.concat([{feedback:msg.feedback, scenario:msg.scenario}])
             }, () => {
                 console.log(that.state)
@@ -100,6 +102,7 @@ class PlayPage extends Component {
         container.scrollTop = container.scrollHeight - container.clientHeight;
     }
     send(msg) {
+        if (!msg) return;
         this.props.socket.emit('Chatmessage', {'name':this.props.name, 'room':this.props.room,'id':this.props.socket.id, 'content': msg})
         this.setState({
             messages: this.state.messages.concat([{'name':this.props.name, 'room':this.props.room, id: this.props.socket.id, 'content': msg}])
@@ -179,14 +182,14 @@ class PlayPage extends Component {
             <Scenario ref="test" scenario = {this.state.scenario} users={this.props.users} gameStarted = {this.state.gameStarted}
                         host = {this.props.host} startGame = {this.startGame} serverDeck = {this.state.serverDeck}
                         vote = {this.state.vote} voteFunc = {this.vote} endGame={this.endGame} voteCount = {this.state.voteCount}
-                        removeCard = {this.removeCard} id={this.props.id} />
+                        removeCard = {this.removeCard} id={this.props.id} resetCounter={this.resetCounter}/>
         )
         const results = (
-            <Results feedback = {this.state.feedback} resetCounter={this.resetCounter} />
+            <Results feedback = {this.state.feedback}/>
         )
         const panes = [
-            {menuItem:'Game', render: () => <Tab.Pane style={{height:'95%', padding:'0'}}> {scenario} </Tab.Pane>},
-            {menuItem: (<Menu.Item key="results" id="resultsTab"> Results {this.state.unreadCounter > 0 ? <Label color="teal">{this.state.unreadCounter}</Label> : null}</Menu.Item>), render: () => <Tab.Pane style={{height:'95%', padding:'0'}}> {results} </Tab.Pane>}
+            {menuItem:(<Menu.Item key="game" id="gameTab"> Game {this.state.unreadCounter > 0 ? <Label color="teal">{this.state.unreadCounter}</Label> : null}</Menu.Item>), render: () => <Tab.Pane style={{height:'95%', padding:'0'}}> {scenario} </Tab.Pane>},
+            {menuItem: (<Menu.Item key="results" id="resultsTab"> Results </Menu.Item>), render: () => <Tab.Pane style={{height:'95%', padding:'0'}}> {results} </Tab.Pane>}
         ]
         if (!this.props.joined){
             return (
