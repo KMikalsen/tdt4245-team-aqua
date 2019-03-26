@@ -3,6 +3,7 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
 const charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+const colors = ['74A85F', '3E7F61', '3A4A40', 'DFBD52', 'B95038', '0E1D23', '4D8175', 'DD4B62', '4B464E', '383839']
 
 let rooms = []
 
@@ -53,6 +54,7 @@ io.on('connection', function(socket) {
                 votes:{}
             }
         }
+        msg['color'] = colors[Math.floor(Math.random() * colors.length)];
         rooms[msg.room].users = rooms[msg.room].users.concat([msg])
         rooms[msg.room].votes[msg.id] = false;
         console.log(rooms[msg.room].votes)
