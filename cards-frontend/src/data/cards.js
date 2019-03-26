@@ -9,8 +9,16 @@ const scenarios = {
         id:"S2",
         title:"Friend request",
         description:"You received a friend request from someone you don't know.",
-        cards:["C7", "C8", "C9", "C10", "C11"]
+        cardIDs:["C7", "C8", "C9", "C10", "C11"]
     },
+    's3':{
+        id:"S3",
+        title:"Contest",
+        description:"A friend has sent you a link to a Facebook-contest where you could win some expensive item, the " +
+            "contest wants you to give them access to your profile.",
+        cardIDs: ["C12", "C13", "C14", "C15"]
+    }
+
 }
 
 const cards = [
@@ -77,8 +85,8 @@ const cards = [
         id:"C9",
         scenario:"2",
         title:"Decline it",
-        description:"New phone, who dis? Maybe asking wouldn't have been a bad idea though?",
-        feedback:""
+        description:"Decline the friend request. Unsolicited friends requests are annoying.",
+        feedback:"New phone, who dis? Maybe asking wouldn't have been a bad idea though?"
     },
     {
         id:"C10",
@@ -93,6 +101,42 @@ const cards = [
         title:"Leave it",
         description:"Leave them hanging, id you don't remember them, it's not worth responding.",
         feedback:"This is a bit rude. Certainly there are other ways to sort this out?"
+    },
+    {
+        id:"C12",
+        scenario:"3",
+        title:"Share it",
+        description:"Share the contest to the rest of your friends list, after all referrals give you more chances to win",
+        feedback:"Do you think all your friends appreciate this? You may want to reconsider this"
+    },
+    {
+        id:"C13",
+        scenario:"3",
+        title:"Give access",
+        description:"Give the contest access to your profile, they say they need your name and e-mail so they can contact you ",
+        feedback:"Are you sure that this isn't malicious content? Be sure of this before you participate."
+    },
+    {
+        id:"C14",
+        scenario:"3",
+        title:"Talk to your friend",
+        description:"Decline it and tell your friend to remove the app from his Facebook",
+        feedback:"Maybe your friends doesn't know he sent it. Talk to them and let them know."
+    },
+    {
+        id:"C15",
+        scenario:"3",
+        title:"Contact Facebook",
+        description:"Contact the Facebook administrators to report the contest as a scam",
+        feedback:"Are you confident this is malicious? No rules are broken yet. There are way too many of these " +
+            "for Facebook to handle each and every complaint."
+    },
+    {
+        id:"C16",
+        scenario:"3",
+        title:"Ignore it",
+        description:"Ignore it.",
+        feedback:"You could just leave them hanging. They'll never know, right?"
     },
 ]
 
