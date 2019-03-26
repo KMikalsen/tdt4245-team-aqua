@@ -18,7 +18,7 @@ class GameCard extends Component {
     render(){
         const removeBtn = this.props.serverDeck ? (
             <Card.Content extra>
-                {this.props.removeable ? (<Button size="mini" basic compact onClick = {() => {this.props.removeCard(this.props.id)}}>Remove</Button>) :
+                {this.props.removeable ? (<Button size="mini" color="red" basic compact onClick = {() => {this.props.removeCard(this.props.id)}}>Remove</Button>) :
                 (<Label size="mini" color='teal'>
                 {this.props.owner.name}
                 <Label.Detail>Owner</Label.Detail>

@@ -9,14 +9,14 @@ const scenarios = {
         id:"S2",
         title:"Friend request",
         description:"You received a friend request from someone you don't know.",
-        cardIDs:["C7", "C8", "C9", "C10", "C11"]
+        cards:["C7", "C8", "C9", "C10", "C11"]
     },
-    's3':{
+    'S3':{
         id:"S3",
         title:"Contest",
         description:"A friend has sent you a link to a Facebook-contest where you could win some expensive item, the " +
             "contest wants you to give them access to your profile.",
-        cardIDs: ["C12", "C13", "C14", "C15"]
+        cards: ["C12", "C13", "C14", "C15"]
     }
 
 }

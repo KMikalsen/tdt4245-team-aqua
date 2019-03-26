@@ -55,8 +55,8 @@ class Scenario extends Component {
                         {this.props.voteCount} / {this.props.users.length}
                     </Label>
                     </Button>
-                    <Button style={{visibility:(this.props.host && this.props.gameStarted && (this.props.voteCount === this.props.users.length) && (this.props.serverDeck.length > 0)) ? 'visible': 'hidden'}} variant='contained' onClick = {() => {this.props.endGame()}}>
-                    End turn
+                    <Button color="green" style={{visibility:(this.props.host && this.props.gameStarted && (this.props.voteCount === this.props.users.length) && (this.props.serverDeck.length > 0)) ? 'visible': 'hidden'}} variant='contained' onClick = {() => {this.props.endGame()}}>
+                    Play hand
                     </Button>
                 </div>
             </div>

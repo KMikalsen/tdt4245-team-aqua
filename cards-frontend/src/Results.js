@@ -12,8 +12,14 @@ class Results extends Component {
     }
     render(){
         console.log("feedback", this.props.feedback)
-        const feedback = this.props.feedback.map(item => {
-            return <Segment>
+
+        const feedback = this.props.feedback.map((item, index) => {
+            console.log("item", item.scenario.title)
+            return <div>
+            <Header as='h2' attached='top'>
+                Scenario #{index+1}: {item.scenario.title}
+            </Header >
+            <Segment attached>
                 <Table basic='very' celled collapsing>
                 <Table.Header>
                     <Table.Row>
@@ -39,6 +45,7 @@ class Results extends Component {
                 </Table.Body>
                 </Table>
             </Segment>
+            </div>
         })
 
         return(

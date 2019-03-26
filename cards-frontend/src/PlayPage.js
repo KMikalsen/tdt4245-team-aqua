@@ -72,10 +72,11 @@ class PlayPage extends Component {
                 serverDeck:[],
                 gameStarted: false,
                 unreadCounter: that.state.unreadCounter + 1,
-                feedback: that.state.feedback.concat(msg)
+                feedback: that.state.feedback.concat([{feedback:msg.feedback, scenario:msg.scenario}])
             }, () => {
                 console.log(that.state)
             })
+            document.getElementById('resultsTab').click()
         })
 
         this.props.socket.on('start_game', function(msg) {
@@ -150,7 +151,8 @@ class PlayPage extends Component {
         this.props.socket.emit('game_start', {room:this.props.room, scenario:scenario, deck:scenarios[scenario].cards})
     }
     endGame() {
-        this.props.socket.emit('end_game', {room:this.props.room, serverDeck: this.state.serverDeck})
+        this.props.socket.emit('end_game', {room:this.props.room, serverDeck: this.state.serverDeck, scenario:this.state.scenario})
+        document.getElementById('resultsTab').click()
     }
 
     render(){
@@ -184,7 +186,7 @@ class PlayPage extends Component {
         )
         const panes = [
             {menuItem:'Game', render: () => <Tab.Pane style={{height:'95%', padding:'0'}}> {scenario} </Tab.Pane>},
-            {menuItem: (<Menu.Item key="results"> Results {this.state.unreadCounter > 0 ? <Label color="teal">{this.state.unreadCounter}</Label> : null}</Menu.Item>), render: () => <Tab.Pane style={{height:'95%', padding:'0'}}> {results} </Tab.Pane>}
+            {menuItem: (<Menu.Item key="results" id="resultsTab"> Results {this.state.unreadCounter > 0 ? <Label color="teal">{this.state.unreadCounter}</Label> : null}</Menu.Item>), render: () => <Tab.Pane style={{height:'95%', padding:'0'}}> {results} </Tab.Pane>}
         ]
         if (!this.props.joined){
             return (

@@ -96,7 +96,7 @@ io.on('connection', function(socket) {
     socket.on('end_game', function(msg) {
         console.log("End game", msg)
         let feedback = msg.serverDeck.map(item => {return {title:item.title, feedback:item.feedback}})
-        io.in(msg.room).emit('round_end', {feedback: feedback})
+        io.in(msg.room).emit('round_end', {feedback: feedback, scenario:msg.scenario})
     })
 });
 
