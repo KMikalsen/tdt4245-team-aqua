@@ -27,7 +27,7 @@ class Results extends Component {
                 Scenario #{index+1}: {item.scenario.title}
             </Header >
             <Segment attached>
-                <Table basic='very' celled collapsing>
+                <Table basic celled collapsing>
                 <Table.Header>
                     <Table.Row>
                         <Table.HeaderCell>Card</Table.HeaderCell>
