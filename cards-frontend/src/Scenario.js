@@ -2,7 +2,7 @@ import React, {
     Component
 } from 'react';
 
-import { Button, Card, List, Image, Icon, Label } from 'semantic-ui-react';
+import { Button, Card, List, Image, Icon, Label} from 'semantic-ui-react';
 import GameCard from './GameCard.js';
 import StartGame from './StartGame.js';
 

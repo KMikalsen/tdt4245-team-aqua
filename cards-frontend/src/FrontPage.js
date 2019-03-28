@@ -2,6 +2,7 @@ import React, {
     Component
 } from 'react';
 import {Redirect} from 'react-router-dom';
+import Particles from 'react-particles-js'
 import { Button, Input, Divider } from 'semantic-ui-react';
 
 class FrontPage extends Component {
@@ -56,6 +57,47 @@ class FrontPage extends Component {
                 </div>
                 <div className = "fpImage">
 
+                </div>
+                <div className = "fpParticles">
+                <Particles height="100%"
+                    params={{
+                        "particles": {
+                            "number": {
+                                "value": 80
+                            },
+                            "color":{
+                                "value":"#4DC0B5"
+                            },
+                            "size": {
+                                "value": 3
+                            },
+                            "line_linked": {
+                              "enable": true,
+                              "distance": 150,
+                              "color": "#4DC0B5",
+                              "opacity": 0.4,
+                              "width": 1
+                            },
+                        },
+                        "interactivity": {
+                            "events": {
+                                "onhover": {
+                                    "enable": true,
+                                    "mode": "grab"
+                                }
+                            },
+                            "modes": {
+                              "bubble": {
+                                "distance": 200,
+                                "size": 10,
+                                "duration": 2,
+                                "opacity": 8,
+                                "speed": 3
+                              },
+                          }
+
+                        }
+                    }} />
                 </div>
             </div>
         )
