@@ -63,7 +63,7 @@ class FrontPage extends Component {
                     params={{
                         "particles": {
                             "number": {
-                                "value": 80
+                                "value": 100
                             },
                             "color":{
                                 "value":"#4DC0B5"
@@ -75,21 +75,21 @@ class FrontPage extends Component {
                               "enable": true,
                               "distance": 150,
                               "color": "#4DC0B5",
-                              "opacity": 0.4,
+                              "opacity": 0.6,
                               "width": 1
                             },
                         },
                         "interactivity": {
                             "events": {
                                 "onhover": {
-                                    "enable": true,
-                                    "mode": "grab"
+                                    "enable": false,
+                                    "mode": "bubble"
                                 }
                             },
                             "modes": {
                               "bubble": {
                                 "distance": 200,
-                                "size": 10,
+                                "size": 6,
                                 "duration": 2,
                                 "opacity": 8,
                                 "speed": 3
