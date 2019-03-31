@@ -23,7 +23,7 @@ class Scenario extends Component {
                         <List.Header>
                             {item.name}
                         </List.Header>
-                         { yesVotes.includes(item.id) ? <Label content="vote" color="green" size="mini" basic/>: <Label content="vote" color="red" size="mini" basic/>} {item.host ? <Label content="host" color="teal" size="mini" basic/> : null}
+                         { yesVotes.includes(item.id) ? <Label content="vote" color="green" size="mini"/>: <Label content="vote" color="red" size="mini"/>} {item.host ? <Label content="host" color="teal" size="mini" basic/> : null}
                     </List.Content>
                 </List.Item>)
             })
