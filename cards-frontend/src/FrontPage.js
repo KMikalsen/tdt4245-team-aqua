@@ -28,6 +28,7 @@ class FrontPage extends Component {
                     <Input
                         id="standard-name"
                         label="Name"
+                        maxLength="10"
                         value={this.props.name}
                         onChange={(event) => {
                             this.props.nameChange(event)
@@ -42,6 +43,7 @@ class FrontPage extends Component {
                         placeholder="Room code"
                         action={joinButton}
                         actionPosition='left'
+                        maxLength="4"
                         value={this.props.room}
                         onChange={(event) => {
                             this.props.roomChange(event)
