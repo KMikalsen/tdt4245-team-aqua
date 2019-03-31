@@ -38,7 +38,7 @@ class App extends Component {
             that.setState({
                 users:msg.users
             })
-            console.log(that.state.users)
+            // console.log(that.state.users)
         })
     }
     join_room() {

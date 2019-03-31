@@ -74,7 +74,10 @@ io.on('connection', function(socket) {
         rooms[msg.room].votes[msg.id] = msg.vote;
         let result = Object.values(rooms[msg.room].votes).reduce((total, num) => {return total + (num ? 1 : 0)})
         result = result + 0;
-        io.in(msg.room).emit('vote_update', {result: result })
+        let votes = Object.keys(rooms[msg.room].votes).map( item => {
+            return {user:item, vote: rooms[msg.room].votes[item]}
+        })
+        io.in(msg.room).emit('vote_update', {result: result, roomVotes:votes })
     })
     socket.on('game_start', function(msg) {
         let scenarioCards = msg.deck;
