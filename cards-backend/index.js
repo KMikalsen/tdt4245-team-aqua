@@ -2,7 +2,7 @@ var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
-const charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+const charset = "0123456789"
 const colors = ['74A85F', '3E7F61', '3A4A40', 'DFBD52', 'B95038', '0E1D23', '4D8175', 'DD4B62', '4B464E', '383839']
 
 let rooms = []
