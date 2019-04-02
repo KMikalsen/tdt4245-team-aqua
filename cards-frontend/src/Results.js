@@ -24,7 +24,7 @@ class Results extends Component {
             console.log("item", item.scenario.title)
             return <div>
             <Header as='h2' attached='top'>
-                Scenario #{index+1}: {item.scenario.title}
+                Round #{index+1}: {item.scenario.title}
             </Header >
             <Segment attached>
                 <Table basic celled collapsing>

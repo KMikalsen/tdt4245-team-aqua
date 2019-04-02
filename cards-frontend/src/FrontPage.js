@@ -22,7 +22,9 @@ class FrontPage extends Component {
         return(
             <div className = "App" >
                 <div className = "title">
-                    <h1>Privacy.</h1>
+                    <h1>Privacy<span onClick={()=>{
+                        document.getElementById('fpImage').style.setProperty('background-image', 'url("https://media0.giphy.com/media/CaiVJuZGvR8HK/giphy.gif")')
+                    }}>.</span></h1>
                 </div>
                 <div className = "nameContainer">
                     <Input
@@ -57,7 +59,7 @@ class FrontPage extends Component {
                     </Button>
                 <Divider horizontal>Or</Divider>
                 </div>
-                <div className = "fpImage">
+                <div id="fpImage" className = "fpImage">
 
                 </div>
                 <div className = "fpParticles">
