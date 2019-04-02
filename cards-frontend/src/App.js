@@ -6,7 +6,7 @@ import './App.css';
 import FrontPage from './FrontPage.js';
 import PlayPage from './PlayPage.js';
 import io from 'socket.io-client'
-var socket = io.connect('http://localhost:8000', {
+var socket = io.connect('http://10.22.1.75:8000/', {
     resource: 'nodejs'
 })
 
@@ -38,7 +38,7 @@ class App extends Component {
             that.setState({
                 users:msg.users
             })
-            console.log(that.state.users)
+            // console.log(that.state.users)
         })
     }
     join_room() {
@@ -74,7 +74,7 @@ class App extends Component {
     }
 
     roomChange(event) {
-        var pattern = new RegExp(/[^A-Z]/i);
+        var pattern = new RegExp(/[A-Z]/i);
 
         if ( !pattern.test(event.target.value)) {
             this.setState({

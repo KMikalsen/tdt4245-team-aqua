@@ -2,6 +2,7 @@ import React, {
     Component
 } from 'react';
 import {Redirect} from 'react-router-dom';
+import Particles from 'react-particles-js'
 import { Button, Input, Divider } from 'semantic-ui-react';
 
 class FrontPage extends Component {
@@ -27,6 +28,7 @@ class FrontPage extends Component {
                     <Input
                         id="standard-name"
                         label="Name"
+                        maxLength="10"
                         value={this.props.name}
                         onChange={(event) => {
                             this.props.nameChange(event)
@@ -41,6 +43,7 @@ class FrontPage extends Component {
                         placeholder="Room code"
                         action={joinButton}
                         actionPosition='left'
+                        maxLength="4"
                         value={this.props.room}
                         onChange={(event) => {
                             this.props.roomChange(event)
@@ -56,6 +59,47 @@ class FrontPage extends Component {
                 </div>
                 <div className = "fpImage">
 
+                </div>
+                <div className = "fpParticles">
+                <Particles height="100%"
+                    params={{
+                        "particles": {
+                            "number": {
+                                "value": 100
+                            },
+                            "color":{
+                                "value":"#4DC0B5"
+                            },
+                            "size": {
+                                "value": 3
+                            },
+                            "line_linked": {
+                              "enable": true,
+                              "distance": 150,
+                              "color": "#4DC0B5",
+                              "opacity": 0.6,
+                              "width": 1
+                            },
+                        },
+                        "interactivity": {
+                            "events": {
+                                "onhover": {
+                                    "enable": false,
+                                    "mode": "bubble"
+                                }
+                            },
+                            "modes": {
+                              "bubble": {
+                                "distance": 200,
+                                "size": 6,
+                                "duration": 2,
+                                "opacity": 8,
+                                "speed": 3
+                              },
+                          }
+
+                        }
+                    }} />
                 </div>
             </div>
         )

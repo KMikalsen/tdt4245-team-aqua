@@ -2,7 +2,7 @@ import React, {
     Component
 } from 'react';
 
-import { Button, Card, List, Image, Icon, Label } from 'semantic-ui-react';
+import { Button, Card, List, Image, Icon, Label} from 'semantic-ui-react';
 import GameCard from './GameCard.js';
 import StartGame from './StartGame.js';
 
@@ -15,20 +15,21 @@ class Scenario extends Component {
         this.props.resetCounter();
     }
     render(){
+        const yesVotes = this.props.roomVotes.map(item => {return item.user})
         const users = this.props.users.map(item => {
             return(<List.Item>
-                    <Image avatar style={{borderRadius:'.25rem'}} square src={'https://ui-avatars.com/api/?background='+item.color+'&color=fff&name='+item.name}/>
+                    <Image avatar style={{borderRadius:'.25rem'}} src={'https://ui-avatars.com/api/?background='+item.color+'&color=fff&name='+item.name}/>
                     <List.Content verticalAlign="middle">
                         <List.Header>
                             {item.name}
                         </List.Header>
-                        {item.host ? 'Host' : null}
+                         { yesVotes.includes(item.id) ? <Label content="vote" color="green" size="mini"/>: <Label content="vote" color="red" size="mini"/>} {item.host ? <Label content="host" color="teal" size="mini" basic/> : null}
                     </List.Content>
                 </List.Item>)
             })
 
             const serverDeck = this.props.serverDeck.map(item => {
-                console.log(this.props.users, this.props.users.filter(user=>{return user.id === item.owner}))
+                // console.log(this.props.users, this.props.users.filter(user=>{return user.id === item.owner}))
                 return(
                     <GameCard owner={this.props.users.filter(user=>{return user.id === item.owner})[0]} id={item.id} title={item.title} description={item.description} onclick = {null} removeable={item.removeable} removeCard = {this.props.removeCard} serverDeck={true}/>
                 )

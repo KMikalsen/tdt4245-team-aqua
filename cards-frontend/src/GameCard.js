@@ -6,7 +6,7 @@ import { Button, Card, Label } from 'semantic-ui-react';
 
 const styles = {
     card: {
-        width:'140px',
+        width:'160px',
         margin:'5px',
         flexShrink:'0',
     }
@@ -26,7 +26,7 @@ class GameCard extends Component {
             </Card.Content>) : null;
 
         return(
-            <Card id={this.props.id} style={styles.card} onClick={this.props.onclick ? (event) => {this.props.onclick(event)} : null}>
+            <Card color="teal" id={this.props.id} style={styles.card} onClick={this.props.onclick ? (event) => {this.props.onclick(event)} : null}>
                     <Card.Content style={{flexGrow:0}} header= {this.props.title} />
                     <Card.Content description = {this.props.description} />
                         {removeBtn}

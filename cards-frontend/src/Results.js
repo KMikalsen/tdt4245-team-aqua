@@ -1,7 +1,7 @@
 import React, {
     Component
 } from 'react';
-import {Segment, Table, Header} from 'semantic-ui-react';
+import {Segment, Table, Header, Label} from 'semantic-ui-react';
 
 const feedbackcolor = (color) => {
     switch (color) {
@@ -31,6 +31,7 @@ class Results extends Component {
                 <Table.Header>
                     <Table.Row>
                         <Table.HeaderCell>Card</Table.HeaderCell>
+                        <Table.HeaderCell>Rating</Table.HeaderCell>
                         <Table.HeaderCell>Feedback</Table.HeaderCell>
                     </Table.Row>
                 </Table.Header>
@@ -41,9 +42,12 @@ class Results extends Component {
                                <Table.Cell className={feedbackcolor(cardItem.color)}>
                                  <Header as='h4'>
                                    <Header.Content>
-                                     {cardItem.title}
+                                    {cardItem.title}
                                    </Header.Content>
                                  </Header>
+                               </Table.Cell>
+                               <Table.Cell textAlign='center' className={feedbackcolor(cardItem.color)}>
+                               <Label circular empty color={cardItem.color} />
                                </Table.Cell>
                                <Table.Cell className={feedbackcolor(cardItem.color)} >{cardItem.feedback}</Table.Cell>
                             </Table.Row>

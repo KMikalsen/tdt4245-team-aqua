@@ -29,6 +29,7 @@ class PlayPage extends Component {
             scenario:{},
             playerDeck:[],
             serverDeck:[],
+            roomVotes:[],
             voteCount:0,
             unreadCounter:0,
             vote:false,
@@ -39,7 +40,7 @@ class PlayPage extends Component {
     componentDidMount() {
         let that = this;
         this.props.socket.on('Chatmessage', function(msg) {
-            console.log("got message")
+            // console.log("got message")
             that.setState({
                 messages: that.state.messages.concat([msg])
             })
@@ -64,7 +65,8 @@ class PlayPage extends Component {
 
         this.props.socket.on('vote_update', function(msg) {
             that.setState({
-                voteCount: msg.result
+                voteCount: msg.result,
+                roomVotes: msg.roomVotes
             })
         })
 
@@ -76,7 +78,7 @@ class PlayPage extends Component {
                 gameStarted: false,
                 feedback: that.state.feedback.concat([{feedback:msg.feedback, scenario:msg.scenario}])
             }, () => {
-                console.log(that.state)
+                // console.log(that.state)
             })
             document.getElementById('resultsTab').click()
         })
@@ -141,7 +143,7 @@ class PlayPage extends Component {
     }
 
     removeCard(id) {
-        console.log(id);
+        // console.log(id);
         this.setState({
             serverDeck: this.state.serverDeck.filter(item => { return item.id !== id }),
             playerDeck: this.state.playerDeck.concat(cards.filter(item => {return item.id === id})),
@@ -150,7 +152,7 @@ class PlayPage extends Component {
     }
 
     startGame(scenario) {
-        console.log(scenario)
+        // console.log(scenario)
         this.props.socket.emit('game_start', {room:this.props.room, scenario:scenario, deck:scenarios[scenario].cards})
     }
     endGame() {
@@ -179,7 +181,7 @@ class PlayPage extends Component {
             )
         })
         const scenario = (
-            <Scenario ref="test" scenario = {this.state.scenario} users={this.props.users} gameStarted = {this.state.gameStarted}
+            <Scenario ref="test" scenario = {this.state.scenario} users={this.props.users} roomVotes={this.state.roomVotes.filter(item => {return item.vote})} gameStarted = {this.state.gameStarted}
                         host = {this.props.host} startGame = {this.startGame} serverDeck = {this.state.serverDeck}
                         vote = {this.state.vote} voteFunc = {this.vote} endGame={this.endGame} voteCount = {this.state.voteCount}
                         removeCard = {this.removeCard} id={this.props.id} resetCounter={this.resetCounter}/>
